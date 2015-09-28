@@ -1,5 +1,6 @@
 define apache::fastcgi::server (
   $host          = '127.0.0.1:9000',
+  $external      = true,
   $timeout       = 15,
   $flush         = false,
   $faux_path     = "/var/www/${name}.fcgi",
@@ -7,6 +8,11 @@ define apache::fastcgi::server (
   $file_type     = 'application/x-httpd-php'
 ) {
   include apache::mod::fastcgi
+
+  $server_type = $external ? {
+    true  => 'FastCGIExternalServer',
+    false => 'FastCGIServer'
+  }
 
   Apache::Mod['fastcgi'] -> Apache::Fastcgi::Server[$title]
 
