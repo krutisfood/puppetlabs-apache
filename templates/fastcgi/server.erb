@@ -6,7 +6,7 @@
   end
   if @socket
     host_or_socket = " -socket #{@socket}"
-  else
+  else if @external
     host_or_socket = " -host #{@host}"
   end
 
@@ -17,6 +17,6 @@
 
   options = timeout + flush + host_or_socket + pass_header
 -%>
-FastCGIExternalServer <%= @faux_path %><%= options %>
+<%= @server_type %> <%= @faux_path %><%= options %>
 Alias <%= @fcgi_alias %> <%= @faux_path %>
 Action <%= @file_type %> <%= @fcgi_alias %>
