@@ -126,6 +126,8 @@ define apache::vhost(
   $fastcgi_socket              = undef,
   $fastcgi_dir                 = undef,
   $fastcgi_idle_timeout        = undef,
+  $fastcgi_faux_path           = undef,
+  $fastcgi_server_external     = true,
   $additional_includes         = [],
   $use_optional_includes       = $::apache::use_optional_includes,
   $apache_version              = $::apache::apache_version,
@@ -521,7 +523,7 @@ define apache::vhost(
   }
 
   # Load mod_fastci if needed and not yet loaded
-  if $fastcgi_server and $fastcgi_socket {
+  if ($fastcgi_server and $fastcgi_socket) or ($fastcgi_faux_path and $fastcgi_idle_timeout) {
     if ! defined(Class['apache::mod::fastcgi']) {
       include ::apache::mod::fastcgi
     }
@@ -1051,6 +1053,9 @@ define apache::vhost(
   # - $fastcgi_dir
   # - $fastcgi_idle_timeout
   # - $apache_version
+  # - $fastcgi_faux_path
+  # - $fastcgi_server_external
+  # - $fastcgi_idle_timeout
   if $fastcgi_server or $fastcgi_dir {
     concat::fragment { "${name}-fastcgi":
       target  => "${priority_real}${filename}.conf",

@@ -1,6 +1,10 @@
 <% if @fastcgi_server -%>
 
-  FastCgiExternalServer <%= @fastcgi_server %> -socket <%= @fastcgi_socket -%>
+  <% if @fastcgi_server_external -%>
+FastCgiExternalServer <%= @fastcgi_server %> -socket <%= @fastcgi_socket -%>
+  <% else -%>
+  FastCgiServer <%= @fastcgi_faux_path %> <%if @fastcgi_idle_timeout %>-idle-timeout <%= @fastcgi_idle_timeout %><% end %>
+  <% end %>
 <%   unless @fastcgi_idle_timeout.nil? %> -idle-timeout <%= @fastcgi_idle_timeout %><% end %>
 <% end -%>
 <% if @fastcgi_dir -%>
