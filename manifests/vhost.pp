@@ -108,6 +108,9 @@ define apache::vhost(
   $fastcgi_server              = undef,
   $fastcgi_socket              = undef,
   $fastcgi_dir                 = undef,
+  $fastcgi_timeout             = undef,
+  $fastcgi_faux_path           = undef,
+  $fastcgi_server_external     = true,
   $additional_includes         = [],
   $use_optional_includes       = $::apache::use_optional_includes,
   $apache_version              = $::apache::apache_version,
@@ -406,7 +409,7 @@ define apache::vhost(
   }
 
   # Load mod_fastci if needed and not yet loaded
-  if $fastcgi_server and $fastcgi_socket {
+  if ($fastcgi_server and $fastcgi_socket) or ($fastcgi_faux_path and $fastcgi_timeout) {
     if ! defined(Class['apache::mod::fastcgi']) {
       include ::apache::mod::fastcgi
     }
@@ -785,7 +788,7 @@ define apache::vhost(
   # - $krb_method_k5passwd
   # - $krb_authoritative
   # - $krb_auth_realms
-  # - $krb_5keytab 
+  # - $krb_5keytab
   # - $krb_local_user_mapping
   if $auth_kerb {
     concat::fragment { "${name}-auth_kerb":
@@ -881,6 +884,9 @@ define apache::vhost(
   # - $fastcgi_socket
   # - $fastcgi_dir
   # - $apache_version
+  # - $fastcgi_faux_path
+  # - $fastcgi_server_external
+  # - $fastcgi_timeout
   if $fastcgi_server or $fastcgi_dir {
     concat::fragment { "${name}-fastcgi":
       target  => "${priority_real}${filename}.conf",
