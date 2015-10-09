@@ -887,7 +887,7 @@ define apache::vhost(
   # - $fastcgi_faux_path
   # - $fastcgi_server_external
   # - $fastcgi_timeout
-  if $fastcgi_server or $fastcgi_dir {
+  if $fastcgi_server or $fastcgi_dir or $fastcgi_server_external {
     concat::fragment { "${name}-fastcgi":
       target  => "${priority_real}${filename}.conf",
       order   => 280,
