@@ -1282,6 +1282,27 @@ describe 'apache::vhost define', :unless => UNSUPPORTED_PLATFORMS.include?(fact(
         it { is_expected.to contain '<Directory "/tmp/fast">' }
       end
     end
+
+    describe 'fastcgilocal' do
+      it 'applies cleanly' do
+        pp = <<-EOS
+          class { 'apache': }
+          class { 'apache::mod::fastcgi': }
+          host { 'test.server': ip => '127.0.0.1' }
+          apache::vhost { 'test.server':
+            fastcgi_faux_path => '/tmp/fast',
+            fastcgi_timeout   => 30,
+            fastcgi_external  => false
+          }
+        EOS
+        apply_manifest(pp, :catch_failures => true)
+      end
+
+      describe file("#{$vhost_dir}/25-test.server.conf") do
+        it { is_expected.to be_file }
+        it { is_expected.to contain 'FastCgiServer /tmp/fast -idle-timeout 30' }
+      end
+    end
   end
 
   describe 'additional_includes' do
