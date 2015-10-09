@@ -1,4 +1,4 @@
-<% if @fastcgi_server -%>
+<% if @fastcgi_faux_path -%>
 
   <% if @fastcgi_server_external -%>
 FastCgiExternalServer <%= @fastcgi_server %> -socket <%= @fastcgi_socket -%>

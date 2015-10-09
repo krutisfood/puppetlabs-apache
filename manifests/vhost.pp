@@ -127,7 +127,6 @@ define apache::vhost(
   $fastcgi_dir                 = undef,
   $fastcgi_idle_timeout        = undef,
   $fastcgi_faux_path           = undef,
-  $fastcgi_server_external     = true,
   $additional_includes         = [],
   $use_optional_includes       = $::apache::use_optional_includes,
   $apache_version              = $::apache::apache_version,
@@ -1056,7 +1055,7 @@ define apache::vhost(
   # - $fastcgi_faux_path
   # - $fastcgi_server_external
   # - $fastcgi_idle_timeout
-  if $fastcgi_server or $fastcgi_dir or $fastcgi_server_external {
+  if $fastcgi_server or $fastcgi_dir or $fastcgi_faux_path or $fastcgi_server_external {
     concat::fragment { "${name}-fastcgi":
       target  => "${priority_real}${filename}.conf",
       order   => 280,
