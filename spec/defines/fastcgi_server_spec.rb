@@ -173,5 +173,26 @@ Action application/x-httpd-php /php-www.fcgi
         should contain_file("fastcgi-pool-www.conf").with_content(expected)
       end
     end
+    describe "local .conf content" do
+      let :params do
+        {
+          :external   => false,
+          :timeout    => 30,
+          :flush      => true,
+          :faux_path  => '/var/www/php-www.fcgi',
+          :fcgi_alias => '/php-www.fcgi',
+          :file_type  => 'application/x-httpd-php'
+        }
+      end
+      let :expected do
+'FastCGIServer /var/www/php-www.fcgi -idle-timeout 30 -flush
+Alias /php-www.fcgi /var/www/php-www.fcgi
+Action application/x-httpd-php /php-www.fcgi
+'
+      end
+      it do
+        should contain_file("fastcgi-pool-www.conf").with_content(expected)
+      end
+    end
   end
 end
