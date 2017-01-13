@@ -15,11 +15,6 @@ define apache::fastcgi::server (
     false => 'FastCGIServer'
   }
 
-  $server_type = $external ? {
-    true  => 'FastCGIExternalServer',
-    false => 'FastCGIServer'
-  }
-
   Apache::Mod['fastcgi'] -> Apache::Fastcgi::Server[$title]
 
   if is_absolute_path($host) {
